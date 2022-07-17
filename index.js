@@ -1,6 +1,9 @@
 const extraerMetada = require("./extraerMetaData");
 const path = require("path");
 const fs = require("fs");
+const dotenv = require("dotenv");
+dotenv.config({ path: ".env", encoding: "utf8", })
+
 
 const extensionMp3 = ".mp3";
 const prefijoMp3 = "\\de";
@@ -35,7 +38,7 @@ async function convertMp3(from = 1, at = 5) {
     }
 }
 
-convertMp3(3, 4); //maximo 1305
+convertMp3(59, 60); //maximo 1305
 
 
 
