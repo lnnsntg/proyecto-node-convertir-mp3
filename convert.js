@@ -11,30 +11,23 @@ const extensionMp4 = ".mp4";
 async function convert(routeFile, title) {
   const nameFile = `${ruta}${title}${extensionMp4}`;
   console.log("Converting --- ", nameFile);
-  let commands = `-i "${routeFile}" -f lavfi -i color=c='random':s='hd720' -c:a copy -shortest -map_metadata -1 "${nameFile}"`;
+  let commands = `-loglevel panic -i "${routeFile}" -f lavfi -i color=c='random':s='hd720' -c:a copy -shortest -map_metadata -1 "${nameFile}"`;
 
   try {
     ffmpeg.runSync(commands);
+    fs.readFile("client_secret.json", async (error, content) => {
+      if (error) {
+        console.log("Error loading client secret file: " + error);
+      }
+      let credentials = await JSON.parse(content);
+      // Authorize a client with the loaded credentials
+      authorize(credentials, nameFile, title);
+    });
   } catch (error) {
-
     console.error(error);
-  }
-  finally {
+  } finally {
     console.log(`Conversion of [${title}] - finished`);
   }
-
-  fs.readFile('client_secret.json', (error, content) => {
-    if (error) {
-      console.log('Error loading client secret file: ' + error);
-      return;
-    }
-    let credentials = JSON.parse(content)
-    // Authorize a client with the loaded credentials
-    authorize(credentials, nameFile, title);
-  });
-
 }
 
-
-
-module.exports = convert ;
+module.exports = convert;
